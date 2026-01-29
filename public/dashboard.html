@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - CSI Centro de Software Ibiza</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Centro de Software Ibiza, Programas CSI</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href='/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <i class="fas fa-home"></i> / Dashboard
+            </div>
+
+            <div id="dashboard" class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="far fa-calendar-alt"></i> Fecha / Hora
+                    </div>
+                    <div class="card-body">
+                        <h2 id="current-date">Cargando...</h2>
+                        <p id="current-time"></p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-hand-holding-usd"></i> Historial de gastos
+                    </div>
+                    <div class="card-body text-center">
+                        <span class="big-number">58</span>
+                        <p>este mes</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="window.location.href='/clientes.html'" style="cursor: pointer;">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i> Clientes <i class="fas fa-sync-alt refresh-icon" onclick="event.stopPropagation(); refreshStats()" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="card-body">
+                        <p><span id="total-clientes">0</span> clientes</p>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 70%; background-color: #9b86d9;"></div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" style="width: 40%; background-color: #f29c9c;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="window.location.href='/soporte.html'" style="cursor: pointer;">
+                    <div class="card-header">
+                        <span><i class="fas fa-headset"></i> Soporte Técnico</span>
+                        <i class="fas fa-sync-alt refresh-icon" onclick="event.stopPropagation(); refreshStats()" style="cursor: pointer; float: right;"></i>
+                    </div>
+                    <div class="card-body text-center">
+                        <span id="count-soporte" class="big-number" style="color: #dc3545;">-</span>
+                        <p>tickets abiertos</p>
+                    </div>
+                </div>
+
+                <div class="card" onclick="window.location.href='/plataformas.html'" style="cursor: pointer;">
+                    <div class="card-header">
+                        <i class="fas fa-server"></i> Plataformas
+                    </div>
+                    <div class="card-body text-center">
+                        <span id="count-plataformas" class="big-number" style="color: #28a745;">-</span>
+                        <p>operativas</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

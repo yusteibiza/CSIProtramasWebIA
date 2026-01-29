@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Cuentas de Correo - CSI</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Specific styles for Cuentas Correo Modal */
+        .port-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* 3 parts for Host, 1 part for Port */
+            gap: 15px;
+            align-items: end; /* Align input bottoms */
+        }
+        .cuentas-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Gestión de Cuentas de Correo</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBox" placeholder="Buscar cuentas...">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="cuentas-page-content">
+                <div class="breadcrumb">
+                    <i class="fas fa-envelope"></i> / Utilidades / Cuentas de Correo
+                </div>
+
+                <div class="cuentas-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" id="addCuentaBtn"><i class="fas fa-plus"></i> Nueva Cuenta</button>
+                        <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Eliminar Seleccionados
+                        </button>
+                    </div>
+                    <div class="search-info">
+                        <span id="cuentaCount">0 cuentas</span>
+                    </div>
+                </div>
+
+                <!-- Cuentas Correo Table -->
+                <div class="table-container">
+                    <table id="cuentasTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Usuario</th>
+                                <th>POP</th>
+                                <th>SMTP</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuentasTableBody">
+                            <!-- Data loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear/editar cuentas -->
+    <div id="cuentaModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" id="closeCuentaModal">&times;</span>
+            <h2 id="modalTitle">Nueva Cuenta de Correo</h2>
+            <form id="cuentaForm">
+                <input type="hidden" id="cuentaId" name="ID">
+                
+                <div class="form-fields">
+                    <!-- Código row (small width) -->
+                    <div class="form-group" style="max-width: 150px;">
+                        <label for="codigo">Código</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="text" id="codigo" name="Codigo" required>
+                            <i class="fas fa-search" style="color: #666; cursor: pointer;"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="Nombre" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="Direccion" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="usuario">Usuario</label>
+                        <input type="text" id="usuario" name="Usuario">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="Password">
+                            <i class="fas fa-eye password-toggle-icon" onclick="togglePasswordVisibility('password', this)"></i>
+                        </div>
+                    </div>
+
+                    <!-- POP Row -->
+                    <div class="port-row">
+                        <div class="form-group">
+                            <label for="pop">POP</label>
+                            <input type="text" id="pop" name="POP">
+                        </div>
+                        <div class="form-group">
+                            <label for="puertoPop">Puerto</label>
+                            <input type="number" id="puertoPop" name="PuertoPOP">
+                        </div>
+                    </div>
+
+                    <!-- SMTP Row -->
+                    <div class="port-row">
+                        <div class="form-group">
+                            <label for="smtp">SMTP</label>
+                            <input type="text" id="smtp" name="SMTP">
+                        </div>
+                        <div class="form-group">
+                            <label for="puertoSmtp">Puerto</label>
+                            <input type="number" id="puertoSmtp" name="PuertoSMTP">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <div class="nav-buttons">
+                        <button type="button" class="btn btn-nav" id="navFirstBtn" title="Primer registro"> << </button>
+                        <button type="button" class="btn btn-nav" id="navPrevBtn" title="Registro anterior"> < </button>
+                        <button type="button" class="btn btn-nav" id="navNextBtn" title="Siguiente registro"> > </button>
+                        <button type="button" class="btn btn-nav" id="navLastBtn" title="Último registro"> >> </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" id="cancelCuentaBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="saveCuentaBtn">Aceptar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/cuentascorreo.js"></script>
+</body>
+</html>

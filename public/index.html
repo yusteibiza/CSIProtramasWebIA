@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSI - Centro de Software Ibiza</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <script>
+        // Redirect to dashboard if no table parameter is present
+        if (!window.location.search) {
+            window.location.href = '/dashboard.html';
+        }
+    </script>
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Centro de Software Ibiza, Programas CSI</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href='/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="breadcrumb">
+                <i class="fas fa-home"></i> / Datos
+            </div>
+
+            <div id="data-view" class="data-view">
+                <div class="view-header" style="display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                    <div class="toolbar-left">
+                        <button onclick="window.location.href='/dashboard.html'" class="btn-back"><i class="fas fa-arrow-left"></i> Volver</button>
+                        <button onclick="openModal()" class="btn-add"><i class="fas fa-plus"></i> Añadir Registro</button>
+                        <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Eliminar Seleccionados
+                        </button>
+                        <h2 id="view-title" style="margin: 0 15px;">Datos</h2>
+                    </div>
+                    <div class="search-info">
+                        <span id="recordCount">0 registros</span>
+                    </div>
+                </div>
+                <div id="table-container" class="table-responsive"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para Formulario -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title">Añadir Registro</h2>
+            <form id="data-form">
+                <div id="form-fields"></div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-save">Guardar</button>
+                    <button type="button" onclick="closeModal()" class="btn-cancel">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

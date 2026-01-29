@@ -1,0 +1,124 @@
+/* Custom Select Dropdown System */
+
+.custom-select-wrapper {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.custom-select-wrapper select {
+    display: none !important; /* Hide native select */
+}
+
+.custom-select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 42px;
+}
+
+.custom-select-trigger:hover {
+    border-color: var(--accent-color);
+}
+
+.custom-select-wrapper.open .custom-select-trigger {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 8px rgba(157, 114, 255, 0.4);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.custom-select-trigger::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: transform 0.3s ease;
+}
+
+.custom-select-wrapper.open .custom-select-trigger::after {
+    transform: rotate(180deg);
+}
+
+/* Options Container */
+.custom-options {
+    position: fixed; /* Use fixed to stay above scrollable containers */
+    background: var(--modal-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* All around radius since it's floating */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 50000; /* Super high to be above modals (10000) */
+    max-height: 250px;
+    overflow-y: auto;
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.custom-select-wrapper.open .custom-options,
+.custom-options.open {
+    display: block;
+    animation: slideDown 0.2s ease;
+}
+
+/* Individual Option */
+.custom-option {
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-option:last-child {
+    border-bottom: none;
+}
+
+/* HOVER AND SELECTED STATE - THE CORE FIX */
+/* Neutral Dark Grey for Dark Mode */
+html.dark-mode .custom-option:hover,
+html.dark-mode .custom-option.selected {
+    background-color: #444444 !important;
+    color: #ffffff !important;
+}
+
+/* For Light Mode fallback */
+.custom-option:hover,
+.custom-option.selected {
+    background-color: var(--hover-bg);
+}
+
+.custom-option.selected {
+    font-weight: 600;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scrollbar for options */
+.custom-options::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-options::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-options::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+.custom-options::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}

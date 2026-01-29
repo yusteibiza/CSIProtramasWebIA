@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Desarrollos - CSI</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Gestión de Desarrollos</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBox" placeholder="Buscar desarrollos...">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="desarrollos-page-content">
+                <div class="breadcrumb">
+                    <i class="fas fa-hammer"></i> / Desarrollos
+                </div>
+
+                <div class="desarrollos-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" id="addDesarrolloBtn"><i class="fas fa-plus"></i> Nuevo Desarrollo</button>
+                        <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Eliminar Seleccionados
+                        </button>
+                    </div>
+                    <div class="search-info">
+                        <span id="desarrolloCount">0 desarrollos</span>
+                    </div>
+                </div>
+
+                <!-- Desarrollos Table -->
+                <div class="table-container">
+                    <table id="desarrollosTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="desarrollosTableBody">
+                            <!-- Data loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear/editar desarrollos -->
+    <div id="desarrolloModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeDesarrolloModal">&times;</span>
+            <h2 id="modalTitle">Nuevo Desarrollo</h2>
+            <form id="desarrolloForm">
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="codigo">Código *</label>
+                        <input type="number" id="codigo" name="Codigo" title="Solo se permiten números" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" name="Nombre" required>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <div class="nav-buttons">
+                        <button type="button" class="btn btn-nav" id="navFirstBtn" title="Primer registro"> << </button>
+                        <button type="button" class="btn btn-nav" id="navPrevBtn" title="Registro anterior"> < </button>
+                        <button type="button" class="btn btn-nav" id="navNextBtn" title="Siguiente registro"> > </button>
+                        <button type="button" class="btn btn-nav" id="navLastBtn" title="Último registro"> >> </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" id="cancelDesarrolloBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Desarrollo</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/desarrollos.js"></script>
+</body>
+</html>

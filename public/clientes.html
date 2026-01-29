@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes - CSI</title>
+    <link rel="stylesheet" href="css/style.css?v=30">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Gestión de Clientes</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBox" placeholder="Buscar clientes...">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="clientes-page-content">
+            <!-- Toolbar -->
+            <div class="breadcrumb">
+                <i class="fas fa-users"></i> / Clientes
+            </div>
+
+            <div class="clientes-toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-primary" id="addClienteBtn"><i class="fas fa-plus"></i> Nuevo Cliente</button>
+                    <div class="column-toggle-wrapper" style="position: relative;">
+                        <button class="btn btn-secondary" id="toggleColumnsBtn">
+                            <i class="fas fa-columns"></i> Columnas <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i>
+                        </button>
+                        <div id="columnDropdown" class="column-dropdown">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" id="openFilterBtn">
+                        <i class="fas fa-filter"></i> Filtrar
+                    </button>
+                    <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
+                        <i class="fas fa-trash"></i> Eliminar Seleccionados
+                    </button>
+                </div>
+                <div class="search-info">
+                    <span id="clienteCount">0 clientes</span>
+                </div>
+            </div>
+
+            <!-- Clientes Table -->
+            <div class="table-container">
+                <table id="clientesTable" class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;"><input type="checkbox" id="selectAll"></th>
+                            <th>Código</th>
+                            <th>Nombre Comercial</th>
+                            <th>Nombre Fiscal</th>
+                            <th>Tipo Cliente</th>
+                            <th>Fecha Alta</th>
+                            <th>Nombre Contacto</th>
+                            <th>NIF</th>
+                            <th>Dirección</th>
+                            <th>C.P.</th>
+                            <th>Población</th>
+                            <th>Provincia</th>
+                            <th>Teléfono 1</th>
+                            <th>Teléfono 2</th>
+                            <th>Móvil</th>
+                            <th>Fax</th>
+                            <th>Email</th>
+                            <th>Observaciones</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody">
+                        <!-- Data loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear/editar clientes -->
+    <div id="clienteModal" class="modal modal-large">
+        <div class="modal-content-wrapper">
+            <!-- Modal Header -->
+            <div class="modal-header-new">
+                <div class="header-title">
+                    <span class="main-title">Clientes</span>
+                    <span class="client-name-display" id="modalClientName">NUEVO CLIENTE</span>
+                </div>
+                <button class="close-btn-red" id="closeClienteModal">&times;</button>
+            </div>
+
+            <!-- Modal Sub-Header (Tabs and Toolbar) -->
+            <div class="modal-controls">
+                <div class="modal-tabs">
+                    <button class="tab-btn active" data-tab="tab-datos">
+                        <i class="fas fa-question-circle"></i> Datos
+                    </button>
+                    <button class="tab-btn" data-tab="tab-programas">
+                        <i class="fas fa-bug"></i> Programas
+                    </button>
+                    <button class="tab-btn" data-tab="tab-conexiones">
+                        <i class="fas fa-link"></i> Conexiones Remotas
+                    </button>
+                    <button class="tab-btn" data-tab="tab-equipos">
+                        <i class="fas fa-desktop"></i> Equipos
+                    </button>
+                    <button class="tab-btn" data-tab="tab-documentacion">
+                        <i class="fas fa-file-alt"></i> Documentación
+                    </button>
+                </div>
+
+                <div class="modal-toolbar">
+                    <div class="toolbar-group actions">
+                        <button type="button" class="tool-btn" id="modalAddBtn" title="Añadir"><i class="fas fa-plus"></i></button>
+                        <button type="button" class="tool-btn" id="modalDeleteBtn" title="Borrar"><i class="fas fa-trash"></i></button>
+                        <button type="button" class="tool-btn" id="modalEditBtn" title="Editar"><i class="fas fa-pen"></i></button>
+                        <button type="button" class="tool-btn btn-save" id="modalSaveBtn" title="Guardar"><i class="fas fa-save"></i></button>
+                        <button type="button" class="tool-btn btn-cancel" id="modalCancelBtn" title="Cancelar"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="toolbar-separator"></div>
+                    <div class="toolbar-group navigation">
+                        <button type="button" class="tool-btn" id="modalFirstBtn" title="Primero"><i class="fas fa-step-backward"></i></button>
+                        <button type="button" class="tool-btn" id="modalPrevBtn" title="Anterior"><i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="tool-btn" id="modalNextBtn" title="Siguiente"><i class="fas fa-chevron-right"></i></button>
+                        <button type="button" class="tool-btn" id="modalLastBtn" title="Último"><i class="fas fa-step-forward"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Body (Tab Contents) -->
+            <div class="modal-body-new">
+                <form id="clienteForm">
+                    <!-- TAB: DATOS -->
+                    <div id="tab-datos" class="tab-content active">
+                        <div class="datos-layout">
+                            <div class="datos-left">
+                                <div class="form-row">
+                                    <label>Código</label>
+                                    <div class="input-with-search">
+                                        <input type="number" id="codigo" name="Codigo" required>
+                                        <button type="button" class="search-inner-btn"><i class="fas fa-search"></i></button>
+                                    </div>
+                                    <label class="checkbox-label"><input type="checkbox" name="Activo" checked> Activo</label>
+                                </div>
+                                <div class="form-row">
+                                    <label>Nombre comercial</label>
+                                    <input type="text" id="nombreComercial" name="NombreComercial" required>
+                                </div>
+                                <div class="form-row">
+                                    <label>Nombre fiscal</label>
+                                    <input type="text" id="nombreFiscal" name="NombreFiscal" required>
+                                </div>
+                                <div class="form-row">
+                                    <label>Tipo de cliente</label>
+                                    <select id="tipoCliente" name="TipoCliente">
+                                        <option value="">Seleccionar...</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <label>Fecha de alta</label>
+                                    <input type="date" id="fechaAlta" name="FechaAlta">
+                                </div>
+                                <div class="form-row">
+                                    <label>Nombre de contacto</label>
+                                    <input type="text" id="nombreContacto" name="NombreContacto">
+                                </div>
+                                <div class="form-row">
+                                    <label>N.I.F.</label>
+                                    <input type="text" id="nif" name="NIF" required>
+                                </div>
+                                <div class="form-row">
+                                    <label>Dirección</label>
+                                    <input type="text" id="direccion" name="Direccion">
+                                </div>
+                                <div class="form-row">
+                                    <label>Código postal</label>
+                                    <input type="text" id="codigoPostal" name="CodigoPostal">
+                                </div>
+                                <div class="form-row">
+                                    <label>Población</label>
+                                    <select id="poblacion" name="Poblacion">
+                                        <option value="">Seleccionar...</option>
+                                    </select>
+                                </div>
+                                <div class="form-row">
+                                    <label>Provincia</label>
+                                    <input type="text" id="provincia" name="Provincia">
+                                </div>
+                            </div>
+                            <div class="datos-right">
+                                <div class="form-row">
+                                    <label>Dirección IP</label>
+                                    <input type="text" name="DireccionIP">
+                                </div>
+                                <div class="form-row">
+                                    <label>Teléfono 1</label>
+                                    <input type="tel" id="telefono1" name="Telefono1">
+                                </div>
+                                <div class="form-row">
+                                    <label>Teléfono 2</label>
+                                    <input type="tel" id="telefono2" name="Telefono2">
+                                </div>
+                                <div class="form-row">
+                                    <label>Teléfono móvil</label>
+                                    <input type="tel" id="telefonoMovil" name="TelefonoMovil">
+                                </div>
+                                <div class="form-row">
+                                    <label>Fax</label>
+                                    <input type="tel" id="fax" name="Fax">
+                                </div>
+                                <div class="form-row">
+                                    <label>Email</label>
+                                    <input type="email" id="email" name="Email">
+                                </div>
+                                <div class="form-row label-top">
+                                    <label>Observaciones</label>
+                                    <textarea id="observaciones" name="Observaciones" rows="8"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PROGRAMAS -->
+                    <div id="tab-programas" class="tab-content">
+                        <div class="tab-actions-bar" style="margin-bottom: 10px;">
+                            <button type="button" class="btn btn-add" id="addProgramRowBtn">
+                                <i class="fas fa-plus"></i> Añadir Programa
+                            </button>
+                        </div>
+                        <div class="sub-table-container">
+                            <table class="sub-table">
+                                <thead>
+                                    <tr>
+                                        <th>Aplicación</th>
+                                        <th>Plataforma</th>
+                                        <th>Licencias</th>
+                                        <th>Versión</th>
+                                        <th style="text-align: center;">V.E.</th>
+                                        <th>Desarrollo</th>
+                                        <th style="text-align: center;">Contrato</th>
+                                        <th>Notas</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="programasTableBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB: CONEXIONES -->
+                    <div id="tab-conexiones" class="tab-content">
+                        <div class="tab-actions-bar" style="margin-bottom: 10px;">
+                            <button type="button" class="btn btn-add" id="addConnectionRowBtn">
+                                <i class="fas fa-plus"></i> Añadir Conexión
+                            </button>
+                        </div>
+                        <div class="sub-table-container">
+                            <table class="sub-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Nombre</th>
+                                        <th>IP/Dirección</th>
+                                        <th>Puerto</th>
+                                        <th>Usuario</th>
+                                        <th>Password</th>
+                                        <th style="text-align: center;">Activo</th>
+                                        <th>Notas</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="conexionesTableBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- TAB: EQUIPOS -->
+                    <div id="tab-equipos" class="tab-content">
+                        <div class="tab-actions-bar" style="justify-content: center; margin-bottom: 20px;">
+                            <button type="button" class="btn-add btn-fab" id="addEquipoBtn" title="Añadir Equipo">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="equipos-grid">
+                            <!-- Dynamic content -->
+                        </div>
+                    </div>
+
+                    <!-- TAB: DOCUMENTACION -->
+                    <div id="tab-documentacion" class="tab-content">
+                        <div class="docs-container">
+                            <div class="tab-actions-bar">
+                                <button type="button" class="btn-add" id="uploadDocBtn">
+                                    <i class="fas fa-file-upload"></i> Añadir Documento
+                                </button>
+                                <input type="file" id="docFileInput" style="display: none;">
+                            </div>
+                            <div class="docs-grid">
+                                <!-- Carga dinámica de documentos -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Context Menu for Clients Table -->
+    <div id="clientesContextMenu" class="context-menu">
+        <div class="context-menu-item" id="ctxExportExcel">
+            <i class="fas fa-file-excel" style="color: #217346;"></i> <span>Exportar tabla a Excel...</span>
+        </div>
+        <div class="context-menu-item" id="ctxExportWord">
+            <i class="fas fa-file-word" style="color: #2b579a;"></i> <span>Exportar tabla a Word...</span>
+        </div>
+        <div class="context-menu-item" id="ctxExportXML">
+            <i class="fas fa-file-code" style="color: #777;"></i> <span>Exportar tabla a XML...</span>
+        </div>
+        <div class="context-menu-item" id="ctxPrintPDF">
+            <i class="fas fa-print" style="color: #555;"></i> <span>Imprimir tabla (PDF)...</span>
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" id="ctxEditCliente">
+            <i class="fas fa-edit" style="color: #007bff;"></i> <span>Editar cliente</span>
+        </div>
+        <div class="context-menu-item" id="ctxDeleteCliente">
+            <i class="fas fa-trash-alt" style="color: #dc3545;"></i> <span>Borrar cliente</span>
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" id="ctxInfoCliente">
+            <i class="fas fa-info-circle" style="color: #17a2b8;"></i> <span>Información cliente</span>
+        </div>
+    </div>
+
+    <!-- Filter Sidebar (Dynamic) -->
+    <div id="filterSidebar" class="filter-sidebar">
+        <div class="filter-header">
+            <h2>Filtrar clientes</h2>
+            <button id="closeFilterBtn" class="close-filter-btn">&times;</button>
+        </div>
+        <div class="filter-body">
+            <!-- Aplicaciones Card -->
+            <div class="filter-card">
+                <div class="filter-card-header">
+                    <input type="checkbox" id="selectAllApps">
+                    <span>Aplicaciones</span>
+                </div>
+                <div id="appsFilterList" class="filter-list">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+            <!-- Plataformas Card -->
+            <div class="filter-card">
+                <div class="filter-card-header">
+                    <input type="checkbox" id="selectAllPlats">
+                    <span>Plataformas</span>
+                </div>
+                <div id="platsFilterList" class="filter-list">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+            <!-- Tipos de Clientes -->
+            <div class="filter-group">
+                <label>Tipos de clientes</label>
+                <select id="filterTipoCliente">
+                    <option value="">Todos los tipos</option>
+                </select>
+            </div>
+            <!-- Fecha de Alta -->
+            <div class="filter-group">
+                <label>Fecha de alta</label>
+                <div class="filter-row">
+                    <select id="filterFechaOp" style="width: 100px;">
+                        <option value=">=">&gt;=</option>
+                        <option value="<=">&lt;=</option>
+                        <option value="=">=</option>
+                    </select>
+                    <input type="date" id="filterFechaAlta">
+                </div>
+            </div>
+            <!-- NIF -->
+            <div class="filter-group">
+                <label>N.I.F.</label>
+                <input type="text" id="filterNIF" placeholder="Contiene">
+            </div>
+            <!-- Buscar Contenido -->
+            <div class="filter-group">
+                <label>Buscar contenido</label>
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="filterSearch" placeholder="Buscar contenido">
+                </div>
+            </div>
+        </div>
+        <div class="filter-footer">
+            <button id="applyFiltersBtn" class="btn btn-primary"><i class="fas fa-filter"></i> Aplicar filtros</button>
+            <button id="clearFiltersBtn" class="btn btn-secondary"><i class="fas fa-times-circle"></i> Eliminar filtros</button>
+        </div>
+    </div>
+    <div id="filterOverlay" class="filter-overlay"></div>
+
+    <script src="js/main.js?v=4.0"></script>
+    <script src="js/clientes.js?v=38"></script>
+</body>
+</html>

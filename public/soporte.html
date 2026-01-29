@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Soporte Técnico - CSI</title>
+    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Gestión de Soporte Técnico</h1>
+        </div>
+        <div class="top-icons">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchBox" placeholder="Buscar ticket...">
+            </div>
+            <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar Menu -->
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/?table=NotasUsuarios'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Content Area -->
+        <main class="content">
+            <div class="soporte-page-content">
+                <!-- Toolbar -->
+                <div class="breadcrumb">
+                    <i class="fas fa-headset"></i> / Soporte Técnico
+                </div>
+
+                <div class="soporte-toolbar">
+                    <div class="toolbar-left">
+                        <button class="btn btn-primary" id="addSoporteBtn"><i class="fas fa-plus"></i> Nuevo Ticket</button>
+                        <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Eliminar Seleccionados
+                        </button>
+                    </div>
+                    <div class="search-info">
+                        <span id="soporteCount">0 tickets</span>
+                    </div>
+                </div>
+
+                <!-- Soporte Table -->
+                <div class="table-container">
+                    <table id="soporteTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+                                <th>Código</th>
+                                <th>Cliente</th>
+                                <th>Asunto</th>
+                                <th>Estado</th>
+                                <th>Prioridad</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="soporteTableBody">
+                            <!-- Data loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal para crear/editar soporte -->
+    <div id="soporteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeSoporteModal">&times;</span>
+            <h2 id="modalTitle">Nuevo Ticket</h2>
+            <form id="soporteForm">
+                <div class="form-fields">
+                    <div class="form-group">
+                        <label for="codigo">Código Ticket *</label>
+                        <input type="text" id="codigo" name="Codigo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clienteSelect">Seleccionar Cliente</label>
+                        <select id="clienteSelect" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">-- Buscar Cliente --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cliente">Cliente (Texto) *</label>
+                        <input type="text" id="cliente" name="Cliente" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asunto">Asunto *</label>
+                        <input type="text" id="asunto" name="Asunto" required>
+                    </div>
+                    <div class="form-group full-width" style="grid-column: 1 / -1;">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="Descripcion" rows="4" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="Estado" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="Abierto">Abierto</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridad">Prioridad</label>
+                        <select id="prioridad" name="Prioridad" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="Baja">Baja</option>
+                            <option value="Media" selected>Media</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Urgente">Urgente</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <div class="nav-buttons">
+                        <button type="button" class="btn btn-nav" id="navFirstBtn" title="Primer registro"> << </button>
+                        <button type="button" class="btn btn-nav" id="navPrevBtn" title="Registro anterior"> < </button>
+                        <button type="button" class="btn btn-nav" id="navNextBtn" title="Siguiente registro"> > </button>
+                        <button type="button" class="btn btn-nav" id="navLastBtn" title="Último registro"> >> </button>
+                    </div>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-secondary" id="cancelSoporteBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Ticket</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/soporte.js"></script>
+</body>
+</html>
