@@ -14,11 +14,11 @@ module.exports = (db) => {
                 return res.status(400).json({ error: 'ClientesExcel está vacío. No hay datos para importar.' });
             }
 
-            const [delDocumentacion] = await dbp.query('DELETE FROM Documentacion');
-            const [delEquipos] = await dbp.query('DELETE FROM Equipos');
-            const [delAplicacion] = await dbp.query('DELETE FROM AplicacionCliente');
-            const [delConexion] = await dbp.query('DELETE FROM ConexionCliente');
-            const [delClientes] = await dbp.query('DELETE FROM Clientes');
+            await dbp.query('TRUNCATE TABLE Documentacion');
+            await dbp.query('TRUNCATE TABLE Equipos');
+            await dbp.query('TRUNCATE TABLE AplicacionCliente');
+            await dbp.query('TRUNCATE TABLE ConexionCliente');
+            await dbp.query('TRUNCATE TABLE Clientes');
 
             const [insertResult] = await dbp.query(`
                 INSERT INTO Clientes (Codigo, NombreComercial, NombreFiscal, NIF)
@@ -31,11 +31,11 @@ module.exports = (db) => {
             res.json({
                 success: true,
                 deleted: {
-                    documentacion: delDocumentacion.affectedRows,
-                    equipos: delEquipos.affectedRows,
-                    aplicacioncliente: delAplicacion.affectedRows,
-                    conexioncliente: delConexion.affectedRows,
-                    clientes: delClientes.affectedRows
+                    documentacion: 0,
+                    equipos: 0,
+                    aplicacioncliente: 0,
+                    conexioncliente: 0,
+                    clientes: 0
                 },
                 inserted: insertResult.affectedRows,
                 source: excelCount
@@ -47,6 +47,21 @@ module.exports = (db) => {
                 console.error('Error en rollback:', rollbackError);
             }
             res.status(500).json({ error: 'Error recuperando clientes: ' + err.message });
+        }
+    });
+
+    router.post('/fecha-alta', async (req, res) => {
+        const { fechaAlta } = req.body || {};
+        if (!fechaAlta || !/^\d{4}-\d{2}-\d{2}$/.test(fechaAlta)) {
+            return res.status(400).json({ error: 'Fecha inválida. Usa el formato YYYY-MM-DD.' });
+        }
+
+        try {
+            const dbp = db.promise();
+            const [result] = await dbp.query('UPDATE Clientes SET FechaAlta = ?', [fechaAlta]);
+            res.json({ success: true, affected: result.affectedRows, fechaAlta });
+        } catch (err) {
+            res.status(500).json({ error: 'Error al actualizar fecha de alta: ' + err.message });
         }
     });
 

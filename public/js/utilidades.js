@@ -3,6 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (restoreBtn) {
         restoreBtn.addEventListener('click', restoreClientesDefault);
     }
+
+    const fechaAltaBtn = document.getElementById('aplicarFechaAltaBtn');
+    if (fechaAltaBtn) {
+        fechaAltaBtn.addEventListener('click', aplicarFechaAlta);
+    }
 });
 
 async function restoreClientesDefault() {
@@ -51,4 +56,65 @@ async function restoreClientesDefault() {
     }
 
     if (restoreBtn) restoreBtn.disabled = false;
+}
+
+async function aplicarFechaAlta() {
+    const input = document.getElementById('fechaAltaInput');
+    const statusEl = document.getElementById('fechaAltaStatus');
+    const btn = document.getElementById('aplicarFechaAltaBtn');
+    const fechaAlta = input ? input.value : '';
+
+    if (!fechaAlta) {
+        showAlert('Selecciona una fecha válida.', 'warning');
+        return;
+    }
+
+    if (!await showConfirm(`¿Aplicar la fecha ${fechaAlta} a todos los clientes?`)) {
+        return;
+    }
+
+    if (btn) btn.disabled = true;
+    if (statusEl) {
+        statusEl.textContent = 'Aplicando...';
+        statusEl.classList.add('loading');
+        statusEl.classList.remove('success', 'error');
+    }
+
+    try {
+        const response = await fetch('/api/utilidades/fecha-alta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ fechaAlta })
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok) {
+            const msg = `Fecha aplicada a ${data.affected || 0} clientes.`;
+            if (statusEl) {
+                statusEl.textContent = msg;
+                statusEl.classList.remove('loading');
+                statusEl.classList.add('success');
+            }
+            showAlert(msg, 'success');
+        } else {
+            const message = data.error || 'Error al aplicar la fecha de alta.';
+            if (statusEl) {
+                statusEl.textContent = message;
+                statusEl.classList.remove('loading');
+                statusEl.classList.add('error');
+            }
+            showAlert(message, 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        const message = 'Error de conexión al aplicar la fecha de alta.';
+        if (statusEl) {
+            statusEl.textContent = message;
+            statusEl.classList.remove('loading');
+            statusEl.classList.add('error');
+        }
+        showAlert(message, 'error');
+    }
+
+    if (btn) btn.disabled = false;
 }

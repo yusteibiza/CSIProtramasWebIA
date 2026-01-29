@@ -3105,3 +3105,17 @@ html.dark-mode .preview-listado-content {
 .utility-status.error {
     color: var(--btn-delete-bg);
 }
+
+.utility-date-input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    min-width: 180px;
+    height: 42px;
+}
+
+.utility-actions .btn {
+    height: 42px;
+}
