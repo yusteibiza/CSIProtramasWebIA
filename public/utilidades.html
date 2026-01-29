@@ -4,7 +4,7 @@
     <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Plataformas - CSI</title>
+    <title>Utilidades CSI - CSI</title>
     <link rel="stylesheet" href="css/style.css?v=4">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -16,13 +16,9 @@
         </button>
         <div class="logo-section">
             <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
-            <h1>Gestión de Plataformas</h1>
+            <h1>Utilidades CSI</h1>
         </div>
         <div class="top-icons">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchBox" placeholder="Buscar plataformas...">
-            </div>
             <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
             <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
             <i class="fas fa-user-circle"></i>
@@ -75,77 +71,41 @@
 
         <!-- Content Area -->
         <main class="content">
-            <div class="plataformas-page-content">
+            <div class="utilidades-page-content">
                 <div class="breadcrumb">
-                    <i class="fas fa-desktop"></i> / Plataformas
+                    <i class="fas fa-toolbox"></i> / Utilidades CSI
                 </div>
 
-                <div class="plataformas-toolbar">
-                    <div class="toolbar-left">
-                        <button class="btn btn-primary" id="addPlataformaBtn"><i class="fas fa-plus"></i> Nueva Plataforma</button>
-                        <button class="btn btn-delete" id="bulkDeleteBtn" style="display: none;">
-                            <i class="fas fa-trash"></i> Eliminar Seleccionados
-                        </button>
+                <div class="utility-grid">
+                    <div class="card utility-card danger">
+                        <div class="card-header">
+                            <span>Recuperar clientes por defecto</span>
+                            <span class="utility-badge">Importación</span>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                Esta acción elimina todos los clientes actuales y carga los clientes por defecto desde
+                                la tabla <strong>ClientesExcel</strong>.
+                            </p>
+                            <ul class="utility-list">
+                                <li>Se eliminarán Documentación, Equipos, Conexiones y Aplicaciones vinculadas.</li>
+                                <li>Se limpiará la tabla de Clientes y se importarán los datos por defecto.</li>
+                                <li>La acción no se puede deshacer.</li>
+                            </ul>
+                            <div class="utility-actions">
+                                <button id="restoreClientesBtn" class="btn btn-delete">
+                                    <i class="fas fa-rotate-left"></i> Recuperar clientes por defecto
+                                </button>
+                                <span id="restoreStatus" class="utility-status"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="search-info">
-                        <span id="plataformaCount">0 plataformas</span>
-                    </div>
-                </div>
-
-                <!-- Plataformas Table -->
-                <div class="table-container">
-                    <table id="plataformasTable" class="data-table">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" id="selectAll"></th>
-                                <th>Código</th>
-                                <th>Nombre</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="plataformasTableBody">
-                            <!-- Data loaded here -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modal para crear/editar plataformas -->
-    <div id="plataformaModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closePlataformaModal">&times;</span>
-            <h2 id="modalTitle">Nueva Plataforma</h2>
-            <form id="plataformaForm">
-                <div class="form-fields">
-                    <div class="form-group">
-                        <label for="codigo">Código *</label>
-                        <input type="number" id="codigo" name="Codigo" title="Solo se permiten números" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nombre">Nombre *</label>
-                        <input type="text" id="nombre" name="Nombre" required>
-                    </div>
-                </div>
-
-                <div class="modal-buttons">
-                    <div class="nav-buttons">
-                        <button type="button" class="btn btn-nav" id="navFirstBtn" title="Primer registro"> << </button>
-                        <button type="button" class="btn btn-nav" id="navPrevBtn" title="Registro anterior"> < </button>
-                        <button type="button" class="btn btn-nav" id="navNextBtn" title="Siguiente registro"> > </button>
-                        <button type="button" class="btn btn-nav" id="navLastBtn" title="Último registro"> >> </button>
-                    </div>
-                    <div class="action-buttons">
-                        <button type="button" class="btn btn-secondary" id="cancelPlataformaBtn">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Guardar Plataforma</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script src="js/main.js"></script>
-    <script src="js/plataformas.js"></script>
+    <script src="js/utilidades.js"></script>
 </body>
 </html>

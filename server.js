@@ -73,6 +73,7 @@ const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 const documentRoutes = require('./routes/documents');
 const emailRoutes = require('./routes/emails');
+const utilitiesRoutes = require('./routes/utilities');
 
 // --- MOUNT ROUTES ---
 app.use('/api/config', configRoutes);
@@ -80,6 +81,7 @@ app.use('/api', authRoutes(db));
 app.use('/api', apiRoutes(db));
 app.use('/api/documentacion', documentRoutes(db, upload));
 app.use('/api', emailRoutes(db, upload));
+app.use('/api/utilidades', utilitiesRoutes(db));
 
 // Start server
 app.listen(port, () => {

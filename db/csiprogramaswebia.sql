@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
--- Host: localhost    Database: csiprogramaswebia
+-- Host: 192.168.250.4    Database: csiprogramaswebia
 -- ------------------------------------------------------
 -- Server version	8.0.43
 
@@ -15,13 +15,13 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP DATABASE `csiprogramaswebia`;
-CREATE DATABASE `csiprogramaswebia`;
-USE `csiprogramaswebia`;
-
 --
 -- Table structure for table `aplicacioncliente`
 --
+
+DROP DATABASE `csiprogramaswebia`;
+CREATE DATABASE `csiprogramaswebia`;
+USE `csiprogramaswebia`;
 
 DROP TABLE IF EXISTS `aplicacioncliente`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -45,11 +45,11 @@ CREATE TABLE `aplicacioncliente` (
   KEY `IDAplicacion` (`IDAplicacion`),
   KEY `IDDesarrollo` (`IDDesarrollo`),
   KEY `IDPlataforma` (`IDPlataforma`),
-  CONSTRAINT `aplicacioncliente_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `aplicacioncliente_ibfk_2` FOREIGN KEY (`IDAplicacion`) REFERENCES `aplicaciones` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `aplicacioncliente_ibfk_3` FOREIGN KEY (`IDDesarrollo`) REFERENCES `desarrollos` (`ID`) ON DELETE SET NULL,
-  CONSTRAINT `aplicacioncliente_ibfk_4` FOREIGN KEY (`IDPlataforma`) REFERENCES `plataformas` (`ID`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `aplicacioncliente_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE RESTRICT,
+  CONSTRAINT `aplicacioncliente_ibfk_2` FOREIGN KEY (`IDAplicacion`) REFERENCES `aplicaciones` (`ID`) ON DELETE RESTRICT,
+  CONSTRAINT `aplicacioncliente_ibfk_3` FOREIGN KEY (`IDDesarrollo`) REFERENCES `desarrollos` (`ID`) ON DELETE RESTRICT,
+  CONSTRAINT `aplicacioncliente_ibfk_4` FOREIGN KEY (`IDPlataforma`) REFERENCES `plataformas` (`ID`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -64,7 +64,7 @@ CREATE TABLE `aplicaciones` (
   `Codigo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,9 +116,9 @@ CREATE TABLE `clientes` (
   PRIMARY KEY (`ID`),
   KEY `TipoCliente` (`TipoCliente`),
   KEY `Poblacion` (`Poblacion`),
-  CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`TipoCliente`) REFERENCES `tiposclientes` (`ID`) ON DELETE SET NULL,
-  CONSTRAINT `clientes_ibfk_2` FOREIGN KEY (`Poblacion`) REFERENCES `poblaciones` (`ID`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`TipoCliente`) REFERENCES `tiposclientes` (`ID`) ON DELETE RESTRICT,
+  CONSTRAINT `clientes_ibfk_2` FOREIGN KEY (`Poblacion`) REFERENCES `poblaciones` (`ID`) ON DELETE SET RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,9 +159,9 @@ CREATE TABLE `conexioncliente` (
   KEY `IX_Clave` (`Clave`),
   KEY `IDCliente` (`IDCliente`),
   KEY `IDTipoConexion` (`IDTipoConexion`),
-  CONSTRAINT `conexioncliente_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE CASCADE,
-  CONSTRAINT `conexioncliente_ibfk_2` FOREIGN KEY (`IDTipoConexion`) REFERENCES `tiposconexiones` (`ID`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `conexioncliente_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE RESTRICT,
+  CONSTRAINT `conexioncliente_ibfk_2` FOREIGN KEY (`IDTipoConexion`) REFERENCES `tiposconexiones` (`ID`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +183,7 @@ CREATE TABLE `cuentascorreo` (
   `PuertoPOP` int DEFAULT NULL,
   `PuertoSMTP` int DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +198,7 @@ CREATE TABLE `desarrollos` (
   `Codigo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -218,8 +218,8 @@ CREATE TABLE `documentacion` (
   `FechaSubida` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`IDDocumentacion`),
   KEY `IX_IDCliNomArch` (`IDCliente`,`NombreArchivo`),
-  CONSTRAINT `documentacion_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `documentacion_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -243,8 +243,8 @@ CREATE TABLE `equipos` (
   `Notas` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`IDEquipos`),
   KEY `IX_IDClienteNombreEquipo` (`IDCliente`,`NombreEquipo`),
-  CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `equipos_ibfk_1` FOREIGN KEY (`IDCliente`) REFERENCES `clientes` (`ID`) ON DELETE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -260,7 +260,7 @@ CREATE TABLE `notasusuarios` (
   `Nota` text COLLATE utf8mb4_unicode_ci,
   PRIMARY KEY (`IDNotasUsuarios`),
   KEY `IDUsuario` (`IDUsuario`),
-  CONSTRAINT `notasusuarios_ibfk_1` FOREIGN KEY (`IDUsuario`) REFERENCES `usuarios` (`IDAcceso`) ON DELETE CASCADE
+  CONSTRAINT `notasusuarios_ibfk_1` FOREIGN KEY (`IDUsuario`) REFERENCES `usuarios` (`IDAcceso`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,7 +276,7 @@ CREATE TABLE `plataformas` (
   `Codigo` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Nombre` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -392,4 +392,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-01-29  0:19:07
+-- Dump completed on 2026-01-29 23:40:40

@@ -97,7 +97,7 @@ module.exports = (db) => {
                 return new Promise((resolve, reject) => {
                     db.query(`SELECT COUNT(*) as count FROM ${d.table} WHERE ${d.col} = ?`, [id], (err, r) => {
                         if (err) reject(err);
-                        else resolve({ count: r[0].count, label: d.label });
+                        else resolve({ count: r[0].count, label: d.label, table: d.table });
                     });
                 });
             });
@@ -332,7 +332,7 @@ module.exports = (db) => {
                     return new Promise((resolve, reject) => {
                         db.query(`SELECT COUNT(*) as count FROM ${d.table} WHERE ${d.col} = ?`, [id], (err, res) => {
                             if (err) reject(err);
-                            else resolve({ count: res[0].count, label: d.label });
+                            else resolve({ count: res[0].count, label: d.label, table: d.table });
                         });
                     });
                 });

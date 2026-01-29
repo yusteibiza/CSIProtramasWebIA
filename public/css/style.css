@@ -3046,3 +3046,62 @@ html.dark-mode .preview-listado-content {
 .btn-print:hover {
     background-color: #333333;
 }
+
+/* Utilidades CSI */
+.utilidades-page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.utility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.utility-card.danger {
+    border-left: 4px solid var(--btn-delete-bg);
+}
+
+.utility-badge {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--text-primary);
+    background: var(--hover-bg);
+    border: 1px solid var(--border-color);
+}
+
+.utility-list {
+    margin: 12px 0 18px 18px;
+    color: var(--text-muted);
+}
+
+.utility-list li {
+    margin-bottom: 6px;
+}
+
+.utility-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.utility-status {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.utility-status.loading {
+    color: var(--accent-color);
+}
+
+.utility-status.success {
+    color: #16a34a;
+}
+
+.utility-status.error {
+    color: var(--btn-delete-bg);
+}
