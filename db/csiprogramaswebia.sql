@@ -117,7 +117,7 @@ CREATE TABLE `clientes` (
   KEY `TipoCliente` (`TipoCliente`),
   KEY `Poblacion` (`Poblacion`),
   CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`TipoCliente`) REFERENCES `tiposclientes` (`ID`) ON DELETE RESTRICT,
-  CONSTRAINT `clientes_ibfk_2` FOREIGN KEY (`Poblacion`) REFERENCES `poblaciones` (`ID`) ON DELETE SET RESTRICT
+  CONSTRAINT `clientes_ibfk_2` FOREIGN KEY (`Poblacion`) REFERENCES `poblaciones` (`ID`) ON DELETE RESTRICT
 ) ENGINE=InnoDB AUTO_INCREMENT=261 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
