@@ -612,10 +612,17 @@ function addConnectionRow() {
 
 async function saveNewConnection(btn) {
     const row = btn.closest('tr');
+    const tipoSelect = row.querySelector('.c-tipo-select');
+    const tipoValue = tipoSelect ? tipoSelect.value : '';
+
+    if (!tipoValue) {
+        showAlert('No se ha seleccionado ninguna conexión.', 'warning');
+        return;
+    }
     
     const connectionData = {
         IDCliente: editingClienteId,
-        IDTipoConexion: row.querySelector('.c-tipo-select').value || null,
+        IDTipoConexion: tipoValue,
         Nombre: row.querySelector('.c-nom-input').value || '',
         DireccionIP: row.querySelector('.c-ip-input').value || '',
         Puerto: row.querySelector('.c-pue-input').value || null,
@@ -692,9 +699,16 @@ function editClientConnection(index) {
 
 async function updateClientConnection(btn, id) {
     const row = btn.closest('tr');
+    const tipoSelect = row.querySelector('.c-tipo-select');
+    const tipoValue = tipoSelect ? tipoSelect.value : '';
+
+    if (!tipoValue) {
+        showAlert('No se ha seleccionado ninguna conexión.', 'warning');
+        return;
+    }
     
     const connectionData = {
-        IDTipoConexion: row.querySelector('.c-tipo-select').value || null,
+        IDTipoConexion: tipoValue,
         Nombre: row.querySelector('.c-nom-input').value || '',
         DireccionIP: row.querySelector('.c-ip-input').value || '',
         Puerto: row.querySelector('.c-pue-input').value || null,

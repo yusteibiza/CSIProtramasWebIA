@@ -50,6 +50,7 @@ async function loadNotes(user) {
             return;
         }
         renderNotes(data);
+        setDeleteAllVisibility(Array.isArray(data) && data.length > 0);
     } catch (err) {
         console.error(err);
         showAlert('Error de conexión al cargar notas', 'error');
@@ -62,6 +63,7 @@ function renderNotes(notes) {
 
     if (!Array.isArray(notes) || notes.length === 0) {
         board.innerHTML = '<div class="empty-state">No hay notas todavía.</div>';
+        setDeleteAllVisibility(false);
         return;
     }
 
@@ -92,6 +94,16 @@ function renderNotes(notes) {
                     <option value="Verdana">Verdana</option>
                     <option value="Tahoma">Tahoma</option>
                     <option value="Courier New">Courier New</option>
+                    <option value="Roboto">Roboto</option>
+                    <option value="Open Sans">Open Sans</option>
+                    <option value="Lato">Lato</option>
+                    <option value="Montserrat">Montserrat</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Nunito">Nunito</option>
+                    <option value="Merriweather">Merriweather</option>
+                    <option value="Source Sans 3">Source Sans 3</option>
+                    <option value="Playfair Display">Playfair Display</option>
+                    <option value="Fira Sans">Fira Sans</option>
                 </select>
                 <select class="note-select note-size no-custom" data-cmd="fontSize" title="Tamaño">
                     <option value="2">12</option>
@@ -126,17 +138,29 @@ function renderNotes(notes) {
         const parsed = parseNoteHtml(note.Nota || '');
         textArea.innerHTML = parsed.html;
         applyCardColor(card, parsed.color || 'sand');
+        applyCardFont(card, parsed.font || '', parsed.size || '');
         setPickerSelected(colorPicker, parsed.color || 'sand');
+        setToolbarSelect(card.querySelector('.note-font'), parsed.font || '');
+        setToolbarSelect(card.querySelector('.note-size'), parsed.size || '');
 
         bindToolbar(card.querySelector('.note-toolbar'), textArea);
         bindColorPicker(colorPicker, (color) => applyCardColor(card, color));
-        saveBtn.addEventListener('click', () => updateNote(note.IDNotasUsuarios, wrapNoteHtml(textArea.innerHTML, getSelectedColor(colorPicker) || 'sand')));
+        saveBtn.addEventListener('click', () => updateNote(
+            note.IDNotasUsuarios,
+            wrapNoteHtml(
+                textArea.innerHTML,
+                getSelectedColor(colorPicker) || 'sand',
+                getSelectedFont(card.querySelector('.note-font')),
+                getSelectedSize(card.querySelector('.note-size'))
+            )
+        ));
         deleteBtn.addEventListener('click', () => deleteNote(note.IDNotasUsuarios));
 
         board.appendChild(card);
     });
 
     stripCustomSelects(board);
+    setDeleteAllVisibility(true);
 }
 
 async function createNote(user) {
@@ -145,6 +169,8 @@ async function createNote(user) {
     const text = input ? input.textContent.trim() : '';
     const html = input ? input.innerHTML.trim() : '';
     const color = getSelectedColor(document.getElementById('newNoteColorPicker')) || 'sand';
+    const font = getSelectedFont(document.querySelector('.note-toolbar .note-font'));
+    const size = getSelectedSize(document.querySelector('.note-toolbar .note-size'));
 
     if (!text) {
         showAlert('Escribe un texto para la nota.', 'warning');
@@ -155,7 +181,7 @@ async function createNote(user) {
         const res = await fetch('/api/notas', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ IDUsuario: user.IDAcceso, Nota: wrapNoteHtml(html, color) })
+            body: JSON.stringify({ IDUsuario: user.IDAcceso, Nota: wrapNoteHtml(html, color, font, size) })
         });
         const data = await res.json();
         if (!res.ok) {
@@ -246,6 +272,12 @@ async function deleteAllNotes(user) {
     }
 }
 
+function setDeleteAllVisibility(show) {
+    const btn = document.getElementById('deleteAllNotesBtn');
+    if (!btn) return;
+    btn.style.display = show ? '' : 'none';
+}
+
 function bindToolbar(toolbar, editor) {
     if (!toolbar || !editor) return;
     toolbar.querySelectorAll('.note-btn[data-cmd]').forEach(btn => {
@@ -261,6 +293,12 @@ function bindToolbar(toolbar, editor) {
             const cmd = select.getAttribute('data-cmd');
             const value = select.value;
             editor.focus();
+            if (cmd === 'fontName') {
+                editor.style.fontFamily = value;
+            }
+            if (cmd === 'fontSize') {
+                editor.style.fontSize = getFontSizePx(value);
+            }
             document.execCommand(cmd, false, value);
         });
     });
@@ -309,6 +347,14 @@ function applyCardColor(card, color) {
     card.style.setProperty('--note-dark-b', palette.db);
 }
 
+function applyCardFont(card, font, size) {
+    if (!card) return;
+    const text = card.querySelector('.note-text');
+    if (!text) return;
+    if (font) text.style.fontFamily = font;
+    if (size) text.style.fontSize = getFontSizePx(size);
+}
+
 function getColorPalette(color) {
     const palettes = {
         sand: { c1: '#fff3b0', c2: '#ffe79a', b: '#f0d46a', dc1: '#5a4a12', dc2: '#3f330c', db: '#6b5615' },
@@ -320,18 +366,46 @@ function getColorPalette(color) {
     return palettes[color] || palettes.sand;
 }
 
-function wrapNoteHtml(html, color) {
+function wrapNoteHtml(html, color, font, size) {
     const safeColor = color || 'sand';
-    return `<div data-note-color="${safeColor}">${html}</div>`;
+    const safeFont = font || '';
+    const safeSize = size || '';
+    const fontAttr = safeFont ? ` data-note-font="${safeFont}"` : '';
+    const sizeAttr = safeSize ? ` data-note-size="${safeSize}"` : '';
+    return `<div data-note-color="${safeColor}"${fontAttr}${sizeAttr}>${html}</div>`;
 }
 
 function parseNoteHtml(html) {
-    const match = (html || '').match(/data-note-color=\"([^\"]+)\"/i);
-    const color = match ? match[1] : 'sand';
+    const colorMatch = (html || '').match(/data-note-color=\"([^\"]+)\"/i);
+    const fontMatch = (html || '').match(/data-note-font=\"([^\"]+)\"/i);
+    const sizeMatch = (html || '').match(/data-note-size=\"([^\"]+)\"/i);
+    const color = colorMatch ? colorMatch[1] : 'sand';
+    const font = fontMatch ? fontMatch[1] : '';
+    const size = sizeMatch ? sizeMatch[1] : '';
     const stripped = (html || '').replace(/^<div[^>]*>/i, '').replace(/<\/div>$/i, '');
-    return { color, html: stripped };
+    return { color, font, size, html: stripped };
 }
 
 function stripHtml(html) {
     return (html || '').replace(/<[^>]*>/g, '');
+}
+
+function getSelectedFont(select) {
+    if (!select) return '';
+    return select.value || '';
+}
+
+function getSelectedSize(select) {
+    if (!select) return '';
+    return select.value || '';
+}
+
+function setToolbarSelect(select, value) {
+    if (!select || !value) return;
+    select.value = value;
+}
+
+function getFontSizePx(sizeValue) {
+    const map = { '1': '10px', '2': '12px', '3': '14px', '4': '16px', '5': '18px', '6': '22px', '7': '28px' };
+    return map[String(sizeValue)] || '14px';
 }

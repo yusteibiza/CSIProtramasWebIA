@@ -234,29 +234,38 @@ document.addEventListener('DOMContentLoaded', () => {
 function updateActiveSidebarItem() {
     const currentPath = window.location.pathname;
     const sidebarItems = document.querySelectorAll('.sidebar li');
-    
+    const headers = document.querySelectorAll('.accordion-header');
+    const contents = document.querySelectorAll('.accordion-content');
+    let matchedItem = null;
+
     sidebarItems.forEach(item => {
         const onclick = item.getAttribute('onclick');
         if (onclick && onclick.includes(currentPath)) {
-            item.classList.add('active');
-            
-            // Also ensure the parent accordion is open
-            const section = item.closest('.menu-section');
-            if (section) {
-                const header = section.querySelector('.accordion-header');
-                const content = section.querySelector('.accordion-content');
-                if (header && content) {
-                    header.classList.add('active');
-                    content.classList.add('show');
-                    const arrow = header.querySelector('.arrow');
-                    if (arrow) {
-                        arrow.classList.remove('fa-chevron-right');
-                        arrow.classList.add('fa-chevron-down');
-                    }
-                }
-            }
+            matchedItem = item;
         }
     });
+
+    if (!matchedItem) return;
+
+    sidebarItems.forEach(item => item.classList.remove('active'));
+    headers.forEach(header => header.classList.remove('active'));
+    contents.forEach(content => content.classList.remove('show'));
+    matchedItem.classList.add('active');
+    
+    const section = matchedItem.closest('.menu-section');
+    if (section) {
+        const header = section.querySelector('.accordion-header');
+        const content = section.querySelector('.accordion-content');
+        if (header && content) {
+            header.classList.add('active');
+            content.classList.add('show');
+            const arrow = header.querySelector('.arrow');
+            if (arrow) {
+                arrow.classList.remove('fa-chevron-right');
+                arrow.classList.add('fa-chevron-down');
+            }
+        }
+    }
 }
 
 function setupGlobalSearch() {

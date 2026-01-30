@@ -27,6 +27,10 @@
     --login-input-bg: #ffffff;
     --login-input-border: #e2e8f0;
     --login-text-title: #1a4a8e;
+    --topbar-height: 60px;
+    --sidebar-gap: 15px;
+    --table-offset: 160px;
+    --modal-table-offset: 235px;
 }
 
 html.dark-mode {
@@ -220,8 +224,17 @@ html.dark-mode .logo-section:hover .logo {
 .main-container {
     display: flex;
     min-height: calc(100vh - 60px);
+    height: calc(100vh - var(--topbar-height));
     width: 100%;
     overflow: hidden; /* Evita scroll lateral global */
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    overflow-y: hidden;
 }
 
 /* Sidebar */
@@ -233,19 +246,21 @@ html.dark-mode .logo-section:hover .logo {
     border-right: 1px solid var(--border-color);
     /* border-radius: 12px; Removed for a more standard full-height panel look or keep if floating */
     border-radius: 16px;
-    margin: 15px 0 15px 15px;
+    margin: 0;
     box-shadow: 4px 0 24px rgba(0,0,0,0.02);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    overflow-x: auto;
     overflow-x: hidden;
-    height: calc(100vh - 90px);
+    height: calc(100vh - var(--topbar-height) - var(--sidebar-gap) - var(--sidebar-gap) - var(--sidebar-gap) - var(--sidebar-gap) + 18px);
     align-self: flex-start;
     scrollbar-width: none;
-    /* position: sticky;
-    top: 75px; */
+    position: fixed;
+    top: calc(var(--topbar-height) + var(--sidebar-gap) + var(--sidebar-gap));
+    left: var(--sidebar-gap);
 }
 
 .sidebar::-webkit-scrollbar {
@@ -393,8 +408,19 @@ html.dark-mode .menu-section li.active {
     flex: 1;
     padding: 15px 20px 20px 20px; /* Aligned with sidebar margin-top */
     min-width: 0;
+    margin-left: 290px;
+    width: calc(100% - 290px);
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    overflow-x: auto;
+    height: calc(100vh - var(--topbar-height));
+    min-height: 0;
+}
+
+.sidebar.collapsed + .content {
+    margin-left: 100px;
+    width: calc(100% - 100px);
 }
 
 .breadcrumb {
@@ -504,14 +530,22 @@ html.dark-mode .menu-section li.active {
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin-top: 0;
     background: var(--bg-card);
     border-radius: 8px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     table-layout: auto;
 }
+
+table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
 
 th,
 td {
@@ -614,6 +648,7 @@ tr:hover {
     width: 60%;
     max-height: 85vh;
     overflow-y: auto;
+    overflow-x: auto;
     position: relative;
 }
 .close {
@@ -802,11 +837,30 @@ tr:hover {
 .tiposclientes-page-content,
 .plataformas-page-content,
 .usuarios-page-content,
-.soporte-page-content {
+.soporte-page-content,
+.cuentas-page-content,
+.remitentes-page-content {
     padding: 0;
     width: 100%;
     margin: 0;
     max-width: none;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.plataformas-page-content .table-container,
+.desarrollos-page-content .table-container,
+.aplicaciones-page-content .table-container,
+.poblaciones-page-content .table-container,
+.tiposconexiones-page-content .table-container,
+.tiposclientes-page-content .table-container,
+.usuarios-page-content .table-container,
+.cuentas-page-content .table-container,
+.remitentes-page-content .table-container,
+.soporte-page-content .table-container {
+    margin-bottom: calc(var(--sidebar-gap) - 5px);
 }
 
 body.clientes-page .content {
@@ -851,11 +905,13 @@ body.clientes-page .clientes-page-content {
     background-color: var(--bg-card);
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
+    overflow: auto;
     padding: 0;
     width: 100%;
     position: relative;
     scrollbar-width: thin; /* Barras más discretas */
+    flex: 0 1 auto;
+    max-height: calc(100% - var(--table-offset));
 }
 
 .table-container::-webkit-scrollbar {
@@ -872,8 +928,10 @@ body.clientes-page .clientes-page-content {
 }
 
 .clientes-table-container {
-    flex: 1;
+    flex: 0 1 auto;
     overflow-y: auto;
+    overflow-x: auto;
+    max-height: calc(104% - var(--table-offset));
 }
 
 .clientes-table-container::-webkit-scrollbar {
@@ -884,7 +942,8 @@ body.clientes-page .clientes-page-content {
 .data-table {
     width: 100%;
     min-width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     table-layout: auto; /* Let content dictate width */
     background-color: var(--bg-card); /* Ensure bg is white */
 }
@@ -908,6 +967,10 @@ body.clientes-page .clientes-page-content {
     color: white;
     user-select: none;
     font-size: 0.85rem; /* Un poco más pequeña para tablas anchas */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-clip: padding-box;
 }
 
 .data-table td {
@@ -1070,6 +1133,7 @@ body.clientes-page .clientes-page-content {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     max-height: 85vh;
     overflow-y: auto;
+    overflow-x: auto;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;  /* IE 10+ */
 }
@@ -1228,6 +1292,7 @@ html.dark-mode select option {
     min-width: 200px;
     max-height: 352px; /* Adjusted +4px (Total 352px) */
     overflow-y: auto;
+    overflow-x: auto;
     padding: 10px 0;
     margin-top: 5px;
 }
@@ -1500,16 +1565,33 @@ html.dark-mode .modal-header-new {
 /* Body */
 .modal-body-new {
     padding: 20px; /* Balanced H/V */
-    overflow-y: auto;
+    overflow-y: hidden;
+    overflow-x: hidden;
     flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-body-new form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
 }
 
 .tab-content {
     display: none;
+    min-height: 0;
 }
 
 .tab-content.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    height: 100%;
 }
 
 /* Tab: Datos Layout */
@@ -1591,11 +1673,53 @@ html.dark-mode .modal-header-new {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     overflow: auto;
+    flex: 1;
+    min-height: 0;
+}
+
+#tab-programas.tab-content.active,
+#tab-conexiones.tab-content.active {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+#tab-programas .tab-actions-bar,
+#tab-conexiones .tab-actions-bar {
+    flex: 0 0 auto;
+}
+
+#tab-datos.tab-content.active {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-gutter: stable;
+}
+
+#tab-documentacion.tab-content.active,
+#tab-equipos.tab-content.active {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-gutter: stable;
+}
+
+#tab-programas.tab-content.active .sub-table-container,
+#tab-conexiones.tab-content.active .sub-table-container {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    max-height: none;
 }
 
 .sub-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .sub-table th {
@@ -1606,6 +1730,10 @@ html.dark-mode .modal-header-new {
     color: var(--text-muted);
     border-bottom: 2px solid var(--border-color);
     white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-clip: padding-box;
 }
 
 .sub-table th i {
@@ -2288,6 +2416,7 @@ table input, table textarea {
 .filter-body {
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto;
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -2319,6 +2448,7 @@ table input, table textarea {
     gap: 8px;
     max-height: 180px;
     overflow-y: auto;
+    overflow-x: auto;
     padding-right: 5px;
 }
 
@@ -2456,6 +2586,7 @@ table input, table textarea {
 .recipients-list {
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto;
     padding: 10px;
 }
 
@@ -2484,6 +2615,7 @@ table input, table textarea {
 .compose-scrollable {
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto;
     padding: 15px;
 }
 
@@ -2934,6 +3066,7 @@ html.dark-mode .btn-icon-large:hover {
     padding: 20px;
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto;
     background: var(--bg-body);
 }
 
@@ -3090,6 +3223,7 @@ html.dark-mode .preview-listado-content {
 .utility-card {
     display: flex;
     flex-direction: column;
+    border-left: 4px solid var(--accent-color);
 }
 
 .utility-card .card-body {
@@ -3175,6 +3309,13 @@ html.dark-mode .preview-listado-content {
     margin-bottom: 12px;
 }
 
+.notas-toolbar .note-input ul,
+.notas-toolbar .note-input ol {
+    list-style-position: inside;
+    padding-left: 0;
+    margin-left: 0;
+}
+
 .note-toolbar {
     display: flex;
     flex-wrap: nowrap;
@@ -3182,7 +3323,7 @@ html.dark-mode .preview-listado-content {
     margin-bottom: 8px;
     align-items: center;
     width: 100%;
-    overflow-x: auto;
+    overflow: auto;
     white-space: nowrap;
 }
 
@@ -3350,6 +3491,13 @@ html.dark-mode .note-card {
     white-space: pre-wrap;
 }
 
+.note-text ul,
+.note-text ol {
+    list-style-position: inside;
+    padding-left: 0;
+    margin-left: 0;
+}
+
 .note-text:focus {
     outline: none;
 }
@@ -3368,3 +3516,6 @@ html.dark-mode .note-card {
     color: var(--text-muted);
     text-align: center;
 }
+
+
+
