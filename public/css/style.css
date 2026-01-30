@@ -233,7 +233,7 @@ html.dark-mode .logo-section:hover .logo {
     border-right: 1px solid var(--border-color);
     /* border-radius: 12px; Removed for a more standard full-height panel look or keep if floating */
     border-radius: 16px;
-    margin: 15px 0 15px 15px; 
+    margin: 15px 0 15px 15px;
     box-shadow: 4px 0 24px rgba(0,0,0,0.02);
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
     flex-shrink: 0;
@@ -244,6 +244,8 @@ html.dark-mode .logo-section:hover .logo {
     height: calc(100vh - 90px);
     align-self: flex-start;
     scrollbar-width: none;
+    /* position: sticky;
+    top: 75px; */
 }
 
 .sidebar::-webkit-scrollbar {
@@ -806,6 +808,16 @@ tr:hover {
     max-width: none;
 }
 
+body.clientes-page .content {
+    padding-bottom: 15px;
+}
+
+body.clientes-page .clientes-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .clientes-toolbar,
 .aplicaciones-toolbar,
 .desarrollos-toolbar,
@@ -856,6 +868,16 @@ tr:hover {
 
 .table-container::-webkit-scrollbar-track {
     background: #f1f1f1;
+}
+
+.clientes-table-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.clientes-table-container::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
 }
 
 .data-table {
@@ -3064,6 +3086,17 @@ html.dark-mode .preview-listado-content {
     border-left: 4px solid var(--btn-delete-bg);
 }
 
+.utility-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.utility-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .utility-badge {
     font-size: 0.75rem;
     padding: 4px 10px;
@@ -3087,6 +3120,7 @@ html.dark-mode .preview-listado-content {
     align-items: center;
     gap: 14px;
     flex-wrap: wrap;
+    margin-top: auto;
 }
 
 .utility-status {

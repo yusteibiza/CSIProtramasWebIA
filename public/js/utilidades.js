@@ -63,13 +63,14 @@ async function aplicarFechaAlta() {
     const statusEl = document.getElementById('fechaAltaStatus');
     const btn = document.getElementById('aplicarFechaAltaBtn');
     const fechaAlta = input ? input.value : '';
+    const fechaAltaEs = formatFechaEs(fechaAlta);
 
     if (!fechaAlta) {
         showAlert('Selecciona una fecha válida.', 'warning');
         return;
     }
 
-    if (!await showConfirm(`¿Aplicar la fecha ${fechaAlta} a todos los clientes?`)) {
+    if (!await showConfirm(`¿Aplicar la fecha ${fechaAltaEs} a todos los clientes?`)) {
         return;
     }
 
@@ -89,7 +90,7 @@ async function aplicarFechaAlta() {
         const data = await response.json().catch(() => ({}));
 
         if (response.ok) {
-            const msg = `Fecha aplicada a ${data.affected || 0} clientes.`;
+            const msg = `Fecha ${fechaAltaEs} aplicada a ${data.affected || 0} clientes.`;
             if (statusEl) {
                 statusEl.textContent = msg;
                 statusEl.classList.remove('loading');
@@ -117,4 +118,10 @@ async function aplicarFechaAlta() {
     }
 
     if (btn) btn.disabled = false;
+}
+
+function formatFechaEs(fechaIso) {
+    if (!fechaIso || !/^\d{4}-\d{2}-\d{2}$/.test(fechaIso)) return fechaIso;
+    const [y, m, d] = fechaIso.split('-');
+    return `${d}/${m}/${y}`;
 }
