@@ -11,12 +11,15 @@ const CustomSelect = {
 
     updateAll() {
         document.querySelectorAll('select:not(.custom-select-hidden):not(.no-custom)').forEach(select => {
+            if (select.closest('.note-toolbar')) return;
             this.create(select);
         });
     },
 
     create(select) {
         if (select.classList.contains('custom-select-hidden')) return;
+        if (select.classList.contains('no-custom')) return;
+        if (select.closest('.note-toolbar')) return;
 
         // Hide original select
         select.classList.add('custom-select-hidden');

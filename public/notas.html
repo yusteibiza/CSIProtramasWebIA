@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <script>(function(){const t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-mode');})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas adhesivas - CSI</title>
+    <link rel="stylesheet" href="css/style.css?v=36">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="top-bar">
+        <button class="hamburger" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo-section">
+            <img src="img/logo.png" alt="Logo CSI" class="logo" onclick="window.open('http://csibiza.com', '_blank')" style="cursor: pointer;">
+            <h1>Notas adhesivas</h1>
+        </div>
+        <div class="top-icons">
+            <i class="fas fa-home" onclick="window.location.href = '/dashboard.html'" style="cursor: pointer;" title="Ir al Dashboard"></i>
+            <i class="fas fa-moon" id="theme-toggle" onclick="toggleTheme()" style="cursor: pointer;"></i>
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <nav class="sidebar">
+            <div class="menu-section">
+                <h3 class="accordion-header active"><i class="fas fa-file-alt"></i> <span>Ficheros</span> <i class="fas fa-chevron-down arrow"></i></h3>
+                <ul class="accordion-content show">
+                    <li onclick="window.location.href = '/plataformas.html'">Plataformas</li>
+                    <li onclick="window.location.href = '/desarrollos.html'">Desarrollos</li>
+                    <li onclick="window.location.href = '/aplicaciones.html'">Aplicaciones</li>
+                    <li onclick="window.location.href = '/poblaciones.html'">Poblaciones</li>
+                    <li onclick="window.location.href = '/tiposconexiones.html'">Tipos de conexión</li>
+                    <li onclick="window.location.href = '/tiposclientes.html'">Tipos de clientes</li>
+                    <li onclick="window.location.href = '/clientes.html'">Clientes</li>
+                    <li onclick="window.location.href = '/usuarios.html'">Usuarios</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-list"></i> <span>Listados</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li onclick="openListadoModalGlobal()" style="cursor: pointer;">Listado de clientes</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-briefcase"></i> <span>Utilidades</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li class="menu-subheader">Correo electrónico</li>
+                    <li class="submenu-item" onclick="window.location.href = '/cuentascorreo.html'">Cuentas</li>
+                    <li class="submenu-item" onclick="window.location.href = '/remitentes.html'">Remitentes</li>
+                    <li class="submenu-item" onclick="window.location.href = '/enviar.html'">Enviar</li>
+                    <li class="menu-subheader">Otras utilidades</li>
+                    <li class="submenu-item" onclick="window.location.href = '/notas.html'">Notas</li>
+                </ul>
+            </div>
+            <div class="menu-section">
+                <h3 class="accordion-header"><i class="fas fa-cog"></i> <span>CSI</span> <i class="fas fa-chevron-right arrow"></i></h3>
+                <ul class="accordion-content">
+                    <li>Poblaciones como ficheros</li>
+                    <li onclick="window.location.href = '/utilidades.html'">Utilidades CSI</li>
+                    <li onclick="window.location.href = '/soporte.html'">Soporte Técnico</li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="content">
+            <div class="notas-page-content">
+                <div class="breadcrumb">
+                    <i class="fas fa-sticky-note"></i> / Notas adhesivas
+                </div>
+
+                <div class="notas-toolbar card">
+                    <div class="card-header">
+                        <span>Nueva nota</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="note-toolbar" data-target="newNoteText">
+                            <button type="button" class="note-btn" data-cmd="bold" title="Negrita"><i class="fas fa-bold"></i></button>
+                            <button type="button" class="note-btn" data-cmd="italic" title="Cursiva"><i class="fas fa-italic"></i></button>
+                            <button type="button" class="note-btn" data-cmd="underline" title="Subrayado"><i class="fas fa-underline"></i></button>
+                            <span class="note-sep"></span>
+                            <button type="button" class="note-btn" data-cmd="insertUnorderedList" title="Lista"><i class="fas fa-list-ul"></i></button>
+                            <button type="button" class="note-btn" data-cmd="insertOrderedList" title="Lista numerada"><i class="fas fa-list-ol"></i></button>
+                            <span class="note-sep"></span>
+                            <button type="button" class="note-btn" data-cmd="justifyLeft" title="Alinear izquierda"><i class="fas fa-align-left"></i></button>
+                            <button type="button" class="note-btn" data-cmd="justifyCenter" title="Centrar"><i class="fas fa-align-center"></i></button>
+                            <button type="button" class="note-btn" data-cmd="justifyRight" title="Alinear derecha"><i class="fas fa-align-right"></i></button>
+                            <span class="note-sep"></span>
+                            <button type="button" class="note-btn" data-cmd="removeFormat" title="Quitar formato"><i class="fas fa-eraser"></i></button>
+                            <span class="note-sep"></span>
+                            <select class="note-select note-font no-custom" data-cmd="fontName" title="Fuente">
+                                <option value="Arial">Arial</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Times New Roman">Times New Roman</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Tahoma">Tahoma</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+                            <select class="note-select note-size no-custom" data-cmd="fontSize" title="Tamaño">
+                                <option value="2">12</option>
+                                <option value="3" selected>14</option>
+                                <option value="4">16</option>
+                                <option value="5">18</option>
+                                <option value="6">22</option>
+                            </select>
+                            <div class="note-color-inline">
+                                <span class="note-color-label">Color</span>
+                                <div class="note-color-picker" id="newNoteColorPicker">
+                                    <button type="button" class="note-color-btn" data-color="sand" title="Arena"></button>
+                                    <button type="button" class="note-color-btn" data-color="mint" title="Menta"></button>
+                                    <button type="button" class="note-color-btn" data-color="sky" title="Cielo"></button>
+                                    <button type="button" class="note-color-btn" data-color="rose" title="Rosa"></button>
+                                    <button type="button" class="note-color-btn" data-color="lavender" title="Lavanda"></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="newNoteText" class="note-input" contenteditable="true" placeholder="Escribe una nota..."></div>
+                        <div class="utility-actions">
+                            <button id="addNoteBtn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Añadir nota
+                            </button>
+                            <button id="deleteAllNotesBtn" class="btn btn-delete">
+                                <i class="fas fa-trash"></i> Borrar todas
+                            </button>
+                            <span id="notesStatus" class="utility-status"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="notesBoard" class="notes-board">
+                    <!-- Notas renderizadas aquí -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/notas.js"></script>
+</body>
+</html>
+

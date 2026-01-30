@@ -75,6 +75,7 @@ const documentRoutes = require('./routes/documents');
 const emailRoutes = require('./routes/emails');
 const utilitiesRoutes = require('./routes/utilities');
 const healthRoutes = require('./routes/health');
+const notesRoutes = require('./routes/notes');
 
 // --- MOUNT ROUTES ---
 app.use('/api/config', configRoutes);
@@ -84,6 +85,7 @@ app.use('/api/documentacion', documentRoutes(db, upload));
 app.use('/api', emailRoutes(db, upload));
 app.use('/api/utilidades', utilitiesRoutes(db));
 app.use('/api/health', healthRoutes(db));
+app.use('/api/notas', notesRoutes(db));
 
 // Start server
 app.listen(port, () => {
